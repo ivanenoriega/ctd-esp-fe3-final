@@ -1,6 +1,6 @@
 import {render, screen} from "@testing-library/react";
-import IndexPage from "dh-marvel/pages/index.page";
-import Index from "dh-marvel/pages/index.page";
+import IndexPage from "dh-marvel/pages/checkout/index.page";
+import Index from "dh-marvel/pages/checkout/index.page";
 
 describe('IndexPage', () => {
     describe('when rendering default', () => {
