@@ -6,9 +6,9 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Container } from '@mui/material';
-import { faqsData} from 'dh-marvel/components/faqs/faqsData';
-import { FaqsType } from 'dh-marvel/interfaces/types';
-import LayoutGeneral from 'dh-marvel/components/layouts/layout-general';
+import { faqsData} from 'components/faqs/faqsData';
+import { FaqsType } from 'interfaces/types';
+import LayoutGeneral from 'components/layouts/layout-general';
 
 
 interface Props {

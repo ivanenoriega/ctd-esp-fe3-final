@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Cards from "react-credit-cards-2";
 import { useForm } from "react-hook-form";
 import { FormInputText } from "./input/input";
 import "react-credit-cards-2/dist/es/styles-compiled.css";
@@ -9,11 +8,12 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@mui/material/Button";
 import useOrderContext from "context/context";
-import { Error, Order, PaymentInfo } from "dh-marvel/interfaces/types";
+import { Error, Order, PaymentInfo } from "interfaces/types";
 import { postOrder } from "dh-marvel/services/checkout/postOrder";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useRouter } from "next/router";
+import Cards from "react-credit-cards-2";
 
 interface Props {
   prevStep: () => void;

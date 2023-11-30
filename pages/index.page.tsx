@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import type {NextPage, GetServerSideProps} from 'next'
 import Head from 'next/head'
 import { useRouter } from "next/router";
-import BodySingle from "dh-marvel/components/layouts/body/single/body-single";
-import { Comic } from "dh-marvel/interfaces/types"
-import { getComics } from "dh-marvel/services/marvel/marvel.service";
-import ComicPagination from 'dh-marvel/components/pagination/pagination';
-import ComicGrid from 'dh-marvel/components/comicGrid/comicGrid';
-import LayoutGeneral from "dh-marvel/components/layouts/layout-general";
+import BodySingle from "components/layouts/body/single/body-single";
+import { Comic } from "interfaces/types"
+import { getComics } from "services/marvel/marvel.service";
+import ComicPagination from 'components/pagination/pagination';
+import ComicGrid from 'components/comicGrid/comicGrid';
+import LayoutGeneral from "components/layouts/layout-general";
 
 interface Props {
   comics: Comic[];

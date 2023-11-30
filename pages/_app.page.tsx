@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { theme } from "dh-marvel/styles/material-theme";
+import { theme } from "styles/material-theme";
 import { OrderProvider } from "context/context";
 
 function MyApp({ Component, pageProps }: AppProps) {

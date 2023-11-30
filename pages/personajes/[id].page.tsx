@@ -1,10 +1,11 @@
 import React from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
-import {getCharacter, getCharacters} from "dh-marvel/services/marvel/marvel.service";
-import { Character } from "dh-marvel/interfaces/types";
-import CharacterDetail from "dh-marvel/components/characterDetail/characterDetail";
-import LayoutGeneral from "dh-marvel/components/layouts/layout-general";
+import { getCharacter } from "services/marvel/marvel.service";
+import { getComic} from "services/marvel/marvel.service"
+import { Character } from "interfaces/types";
+import CharacterDetail from "components/characterDetail/characterDetail";
+import LayoutGeneral from "components/layouts/layout-general";
 
 interface Props {
   character: Character;
@@ -24,7 +25,7 @@ const CharacterPage = ({ character }: Props) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const data: any = await getCharacters();
+  const data: any = await  getComic();
 
   const paths = data.map((character: any) => {
     return { params: { id: character.id.toString() } };

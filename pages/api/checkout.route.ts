@@ -6,8 +6,8 @@ import {
   ERROR_INCORRECT_ADDRESS,
   ERROR_METHOD_NOT_ALLOWED,
   ERROR_SERVER,
-} from "dh-marvel/services/checkout/checkout.errors";
-import { CheckoutInput } from "dh-marvel/interfaces/types";
+} from "services/checkout/checkout.errors";
+import { CheckoutInput } from "interfaces/types";
 
 const serverError = "error";
 export const invalidAddress = "invalid";

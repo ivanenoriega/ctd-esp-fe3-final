@@ -2,7 +2,7 @@ import React, {ReactNode} from 'react';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import { useRouter } from 'next/router';
-import { Comic } from "dh-marvel/interfaces/types";
+import { Comic } from 'interfaces/types';
 
 interface ComicCard {
   children?: ReactNode

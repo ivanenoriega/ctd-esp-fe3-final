@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getComic } from "dh-marvel/services/marvel/marvel.service";
-import { Comic } from "dh-marvel/interfaces/types";
+import { getComic } from "services/marvel/marvel.service";
+import { Comic } from "interfaces/types";
 
 type Data = Comic | { message: string };
 

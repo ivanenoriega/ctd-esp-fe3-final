@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { deliveryInfoSchema as schema } from "./rules/verification";
-import { DeliveryInfo } from "dh-marvel/interfaces/types";
+import { DeliveryInfo } from "interfaces/types";
 import useOrderContext from "context/context";
 
 interface Props {

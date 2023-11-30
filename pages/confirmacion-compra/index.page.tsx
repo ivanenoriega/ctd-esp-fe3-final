@@ -2,13 +2,13 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import useOrderContext from "context/context";
-import ComicCard from "dh-marvel/components/comicCard/comicCard";
+import ComicCard from "components/comicCard/comicCard";
 import styles from "./styles.module.css";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import CardContent from "@mui/material/CardContent";
-import OrderConfirmed from "dh-marvel/components/orderOk/order";
-import LayoutCheckout from "dh-marvel/components/layouts/layout-checkout";
+import OrderConfirmed from "components/orderOk/order";
+import LayoutCheckout from "components/layouts/layout-checkout";
 import Head from "next/head";
 
 const ConfirmPage = () => {

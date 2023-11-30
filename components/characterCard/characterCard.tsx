@@ -3,7 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
-import { Character } from "dh-marvel/interfaces/types";
+import { Character } from "interfaces/types";
 import { useRouter } from "next/router";
 import styles from "./characterCard.module.css";
 

@@ -1,7 +1,7 @@
 import {
     CheckoutInput,
     Order,
-  } from "dh-marvel/interfaces/types";
+  } from "interfaces/types";
   
   interface Props {
     order: Order

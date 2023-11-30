@@ -4,8 +4,8 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import ComicCard from "dh-marvel/components/comicCard/comicCard";
 import styles from "./order.module.css";
-import { Buyer } from "dh-marvel/interfaces/types";
-import { Comic } from "dh-marvel/interfaces/types"
+import { Buyer } from "interfaces/types";
+import { Comic } from "interfaces/types"
 
 interface Props {
   comic: Comic;

@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import useOrderContext from "context/context";
-import LayoutGeneral from "dh-marvel/components/layouts/layout-general";
-import CharactersGrid from "dh-marvel/components/characterGrid/characterGrid";
-import ComicCard from "dh-marvel/components/comicCard/comicCard";
-import ComicDetails from "dh-marvel/components/comicDetail/comicDetail";
-import { Character } from "dh-marvel/interfaces/types";
-import { Comic } from "dh-marvel/interfaces/types";
-import { getComic, getComicCharacters} from "dh-marvel/services/marvel/marvel.service";
+import LayoutGeneral from "components/layouts/layout-general";
+import CharactersGrid from "components/characterGrid/characterGrid";
+import ComicCard from "components/comicCard/comicCard";
+import ComicDetails from "components/comicDetail/comicDetail";
+import { Character } from "interfaces/types";
+import { Comic } from "interfaces/types";
+import { getComic, getCharacter} from "services/marvel/marvel.service";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import React, { useEffect } from "react";
@@ -51,7 +51,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   try {
     const comic = await getComic(id);
-    const characters = await getComicCharacters(id);
+    const characters = await getCharacter(id);
 
     return {
       props: {
