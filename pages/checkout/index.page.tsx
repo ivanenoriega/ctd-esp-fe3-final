@@ -1,74 +1,221 @@
-import Box from "@mui/material/Box";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import useOrderContext from "context/context";
-import CheckoutForm from "dh-marvel/components/form/CheckoutForm";
-import ComicCard from "dh-marvel/components/comicCard/comicCard";
+import React, { useEffect, useState } from "react";
+import { NextPage } from "next";
+import {
+  Alert,
+  Container,
+  Grid,
+  Paper,
+  Snackbar,
+  Typography,
+} from "@mui/material";
+import BuyingComicDetail from "dh-marvel/components/ComicCard/BuyingComicDetail";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
-import styles from "./styles.module.css";
+import { IComic } from "contracts/comics.contract";
+import { FormProvider, useForm } from "react-hook-form";
+import { schema } from "../../components/rules/index";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import Forms from "dh-marvel/components/Form/Forms";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { toFrontComic } from "mappers/comic.mapper";
+import confetti from "canvas-confetti";
+import { RawCheckoutRequest } from "contracts/checkout.contract";
+import { toApiCheckout } from "mappers/checkout.mapper";
 import LayoutCheckout from "dh-marvel/components/layouts/layout-checkout";
-import Head from "next/head";
+import Cookies from "js-cookie";
+import Spinner from "dh-marvel/components/Spinner/Spinner";
 
-const CheckoutPage = () => {
-  const {
-    order: { comic, buyer },
-  } = useOrderContext();
-
+const CheckoutPage: NextPage = () => {
   const router = useRouter();
+  const { comicId } = router.query;
+  const [comicData, setComicData] = useState<IComic | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleClickGoBack = () => {
+    router.back();
+  };
+
+  type DataForm = yup.InferType<typeof schema>;
+
+  const methods = useForm<DataForm>({
+    resolver: yupResolver(schema),
+    defaultValues: {},
+  });
+
+  const getComicById = async (id: number) => {
+    const response = await fetch(`/api/comics/${id}`);
+    const result = await response.json();
+    return result;
+  };
 
   useEffect(() => {
-    if (!comic || !buyer) {
+    const id = Number(comicId);
+    if (comicId) {
+      getComicById(id).then((res) => {
+        const resApic = toFrontComic(res);
+        setComicData(resApic);
+      });
+    } else {
       router.push("/");
     }
-  }, [comic, buyer, router]);
+  }, [comicId, router]);
 
-  if (!comic || !buyer) return;
+  const onSubmit = async (data: any) => {
+    if (!comicData) {
+      return;
+    }
+    const _data: RawCheckoutRequest = {
+      ...data,
+      comicName: comicData.title,
+      comicImage: comicData.image,
+      comicPrice: comicData.price,
+    };
+    const request = toApiCheckout(_data);
+
+    try {
+      const response = await fetch(`/api/checkout`, {
+        method: "POST",
+        body: JSON.stringify(request),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      const parseRes = await response.json();
+      if (response.ok) {
+        confetti({
+          zIndex: 999,
+          particleCount: 100,
+          spread: 160,
+          angle: -100,
+          origin: {
+            x: 1,
+            y: 0,
+          },
+        });
+        Cookies.set("access", "true");
+        router.push(
+          {
+            pathname: "/confirmacion-compra",
+            query: {
+              comicName: parseRes.data.order.name,
+              comicImage: parseRes.data.order.image,
+              comicPrice: parseRes.data.order.price,
+              address: parseRes.data.customer.address.address1,
+            },
+          },
+          "/confirmacion-compra"
+        );
+      } else {
+        setErrorMessage(parseRes.message as string);
+      }
+    } catch (error) {
+      console.log({ error });
+    }
+  };
 
   return (
-    <>
-      <LayoutCheckout>
-        <Head>
-          <title>Checkout</title>
-          <meta name="description" content="Formulario de compra" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <Box
-          display={"flex"}
-          flexDirection={"row"}
-          justifyContent={"center"}
-          alignItems={"stretch"}
-          gap={5}
-          width={1}
-          height={0.9}
-          m={4}
-          className={styles.container}
+    <LayoutCheckout>
+      <Container
+        maxWidth="md"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: "20px",
+          marginBottom: "30px",
+        }}
+      >
+        <Paper
+          elevation={1}
+          sx={{
+            padding: "10px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+          }}
         >
-          <ComicCard {...comic}>
-            <CardContent>
-              <Typography gutterBottom variant="h6" component="div">
-                {comic.title}
+          {!!comicData ? (
+            <>
+              <ArrowBackIcon
+                fontSize="large"
+                color="secondary"
+                onClick={handleClickGoBack}
+                sx={{
+                  cursor: "pointer",
+                  position: "absolute",
+                  "@media (max-width: 768px)": {
+                    display: "none",
+                  },
+                }}
+              />
+              <Typography variant="h4" align="center" mt={2}>
+                Formulario de compra
               </Typography>
-              <Box
-                display={"flex"}
-                justifyContent={"space-between"}
-                alignItems={"baseline"}
+
+              <Grid
+                container
+                spacing={2}
+                columnSpacing={{ xs: 1, sm: 2, md: 4 }}
               >
-                <Typography gutterBottom variant="body2" component="div">
-                  Detalle de compra:
-                </Typography>
-                <Typography gutterBottom component="div">
-                  $ {comic.price.toFixed(2)} - 1 un.
-                </Typography>
-              </Box>
-            </CardContent>
-          </ComicCard>
-          <Box minWidth={0.5}>
-            <CheckoutForm />
-          </Box>
-        </Box>
-      </LayoutCheckout>
-    </>
+                <Grid
+                  item
+                  xs={12}
+                  md={4}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <BuyingComicDetail comic={comicData} />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  md={8}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "5px",
+                  }}
+                >
+                  {comicData?.stock > 0 ? (
+                    <FormProvider {...methods}>
+                      <Forms onSubmit={onSubmit} />
+                    </FormProvider>
+                  ) : (
+                    <Typography variant="h4" align="center" mt={2}>
+                      sin stock, lo lamentamos 😣
+                    </Typography>
+                  )}
+                </Grid>
+              </Grid>
+            </>
+          ) : (
+            <Spinner />
+          )}
+        </Paper>
+        <Snackbar
+          open={!!errorMessage}
+          autoHideDuration={6000}
+          onClose={() => setErrorMessage("")}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={() => setErrorMessage("")}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+      </Container>
+    </LayoutCheckout>
   );
 };
 

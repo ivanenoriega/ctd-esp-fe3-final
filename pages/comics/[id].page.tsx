@@ -1,67 +1,67 @@
-import Box from "@mui/material/Box";
-import useOrderContext from "context/context";
-import LayoutGeneral from "components/layouts/layout-general";
-import CharactersGrid from "components/characterGrid/characterGrid";
-import ComicCard from "components/comicCard/comicCard";
-import ComicDetails from "components/comicDetail/comicDetail";
-import { Character } from "interfaces/types";
-import { Comic } from "interfaces/types";
-import { getComic, getCharacter} from "services/marvel/marvel.service";
-import { GetServerSideProps } from "next";
-import Head from "next/head";
-import React, { useEffect } from "react";
+import { Container } from "@mui/material";
+import { IComic } from "contracts/comics.contract";
+import ComicDetail from "dh-marvel/components/comic/ComicDetail";
+import LayoutGeneral from "dh-marvel/components/layouts/layout-general";
+import { getComic, getComics } from "dh-marvel/services/marvel/marvel.service";
+import { toFrontComic, toFrontComics } from "mappers/comic.mapper";
+import { GetStaticProps, NextPage } from "next";
+import { useRouter } from "next/router";
+import React from "react";
 
-interface Props {
-  comic: Comic;
-  characters: Character[];
+interface PropsComic {
+  comic: IComic;
 }
 
-const ComicPage = ({ comic, characters }: Props) => {
-  const { resetOrder } = useOrderContext();
+const ComicsPage: NextPage<PropsComic> = ({ comic }) => {
+  const router = useRouter();
 
-  useEffect(() => {
-    resetOrder();
-  }, []);
+  const handleClickToBy = () => {
+    router.push({ pathname: `/checkout/`, query: { comicId: comic.id } });
+  };
+
+  const handleClickGoBack = () => {
+    router.push("/");
+  };
 
   return (
     <LayoutGeneral>
-      <Head>
-        <title>{comic.title}</title>
-        <meta name="description" content="Página de detalle de cómic" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Box>
-        <Box
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          p={5}
-        >
-          <ComicCard {...comic} />
-          <ComicDetails comic={comic} />
-        </Box>
-        <CharactersGrid characters={characters} />
-      </Box>
+      <Container
+        maxWidth="md"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: "20px",
+          marginBottom: "30px",
+        }}
+      >
+        <ComicDetail
+          comic={comic}
+          onBuyClick={handleClickToBy}
+          onGoBackClick={handleClickGoBack}
+        />
+      </Container>
     </LayoutGeneral>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const id = Number(params?.id);
 
   try {
-    const comic = await getComic(id);
-    const characters = await getCharacter(id);
+    const comicApi = await getComic(id);
+
+    const comic = toFrontComic(comicApi);
 
     return {
       props: {
         comic,
-        characters,
       },
+      revalidate: 10,
     };
   } catch (error) {
-    console.error(error);
-
+    console.error("No se pudo obtener el comic", error);
     return {
       props: {
         comic: {},
@@ -70,4 +70,15 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   }
 };
 
-export default ComicPage;
+export async function getStaticPaths() {
+  const comicsApi = await getComics();
+  const comics = toFrontComics(comicsApi.data);
+
+  const paths = comics.comics.map((comic) => ({
+    params: { id: comic.id.toString() },
+  }));
+
+  return { paths, fallback: "blocking" };
+}
+
+export default ComicsPage;

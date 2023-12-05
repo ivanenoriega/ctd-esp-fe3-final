@@ -1,51 +1,55 @@
+import { Container } from "@mui/material";
+import { ICharacter } from "contracts/character.contract";
+import CharacterDetail from "dh-marvel/components/character/CharacterDetail";
+import LayoutGeneral from "dh-marvel/components/layouts/layout-general";
+import { getCharacter } from "dh-marvel/services/marvel/marvel.service";
+import { toFrontCharacter } from "mappers/character.mapper";
+import { GetServerSideProps, NextPage } from "next";
+import { useRouter } from "next/router";
 import React from "react";
-import { GetStaticPaths, GetStaticProps } from "next";
-import Head from "next/head";
-import { getCharacter } from "services/marvel/marvel.service";
-import { getComic} from "services/marvel/marvel.service"
-import { Character } from "interfaces/types";
-import CharacterDetail from "components/characterDetail/characterDetail";
-import LayoutGeneral from "components/layouts/layout-general";
 
-interface Props {
-  character: Character;
+interface PropsCharacter {
+  character: ICharacter;
 }
 
-const CharacterPage = ({ character }: Props) => {
+const CharacterPage: NextPage<PropsCharacter> = ({ character }) => {
+  const router = useRouter();
+
+  const handleClickGoBack = () => {
+    router.back();
+  };
+
   return (
     <LayoutGeneral>
-      <Head>
-        <title>Detalle de personaje</title>
-        <meta name="description" content="Página de descripción de personaje" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <CharacterDetail character={character} />
+      <Container
+        maxWidth="md"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: "20px",
+          marginBottom: "30px",
+        }}
+      >
+        <CharacterDetail
+          character={character}
+          onGoBackClick={handleClickGoBack}
+        />
+      </Container>
     </LayoutGeneral>
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const data: any = await  getComic();
-
-  const paths = data.map((character: any) => {
-    return { params: { id: character.id.toString() } };
-  });
-
-  return {
-    paths,
-    fallback: true,
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const id = parseInt(params?.id as string);
-  const character = await getCharacter(id);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const id = Number(context.params?.id);
+  const characterApi = await getCharacter(id);
+  const character = toFrontCharacter(characterApi);
 
   return {
     props: {
       character,
     },
-    revalidate: 60,
   };
 };
 

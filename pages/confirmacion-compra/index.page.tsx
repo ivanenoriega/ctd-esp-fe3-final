@@ -1,43 +1,55 @@
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import useOrderContext from "context/context";
-import ComicCard from "components/comicCard/comicCard";
-import styles from "./styles.module.css";
+import { Container } from "@mui/material";
+import PurchaseConfirmation from "dh-marvel/components/PurchaseConfirmation/PurchaseConfirmation";
+import LayoutCheckout from "dh-marvel/components/layouts/layout-checkout";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import CardContent from "@mui/material/CardContent";
-import OrderConfirmed from "components/orderOk/order";
-import LayoutCheckout from "components/layouts/layout-checkout";
-import Head from "next/head";
+import React, { useEffect } from "react";
+import Cookies from "js-cookie";
+import Spinner from "dh-marvel/components/Spinner/Spinner";
 
-const ConfirmPage = () => {
-  const {
-    order: { comic, buyer },
-  } = useOrderContext();
-
+const ConfirmationPage = () => {
   const router = useRouter();
 
+  const handleClickGoHome = () => {
+    Cookies.remove("access");
+
+    router.push("/");
+  };
+
   useEffect(() => {
-    if (!comic || !buyer) {
+    if (!Cookies.get("access")) {
       router.push("/");
     }
-  }, [comic, buyer, router]);
+  }, [router]);
 
-  if (!comic || !buyer) return null;
+  const { comicName, comicPrice, comicImage, address } = router.query;
 
   return (
     <LayoutCheckout>
-      <Head>
-        <title>Compra confirmada</title>
-        <meta name="description" content="La orden ha sido creada con éxito" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Box display={"flex"} justifyContent={"center"} width={1}>
-        <OrderConfirmed comic={comic} buyer={buyer} />
-      </Box>
+      <Container
+        maxWidth="md"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: "20px",
+          marginBottom: "30px",
+        }}
+      >
+        {!!comicName ? (
+          <PurchaseConfirmation
+            comicName={(comicName as string) || ""}
+            comicImage={(comicImage as string) || ""}
+            address={(address as string) || ""}
+            price={(comicPrice as string) || ""}
+            onGoBackClick={handleClickGoHome}
+          />
+        ) : (
+          <Spinner />
+        )}
+      </Container>
     </LayoutCheckout>
   );
 };
 
-export default ConfirmPage;
+export default ConfirmationPage;

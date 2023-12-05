@@ -1,34 +1,53 @@
-import React, {ReactNode} from 'react';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import { useRouter } from 'next/router';
-import { Comic } from 'interfaces/types';
+import { Card } from "@mui/material";
+import { CardMedia } from "@mui/material";
+import { CardActions } from "@mui/material";
+import { CardContent } from "@mui/material";
+import { Typography } from "@mui/material";
+import { Button } from "@mui/material";
+import { useRouter } from "next/router";
+import React from "react";
 
-interface ComicCard {
-  children?: ReactNode
+export interface PropsCard {
+  id: number;
+  title: string;
+  image: string;
 }
 
-type ComicCardProps = ComicCard & Comic;
-
-const ComicCard: React.FC<ComicCardProps> = ({ children, id, thumbnail, title, description }) => {
+export const ComicCard = ({ id, title, image }: PropsCard) => {
   const router = useRouter();
 
-  const handleClick = () => {
+  const handleClickDetail = () => {
     router.push(`/comics/${id}`);
   };
 
+  const handleClickComprar = () => {
+    router.push({ pathname: `/checkout/`, query: { comicId: id } });
+  };
   return (
-    <Card sx={{ width: 345, height: 1, display: 'flex', flexDirection: 'column' }}>
-      <CardMedia
-        component="img"
-        alt={`${title} thumbnail photo`}
-        height="300"
-        image={`${thumbnail.path}.${thumbnail.extension}`}
-        sx={{ objectFit: 'contain', flex: 1 }}
-      />
-      {children}
-    </Card>
+    <>
+      <Card
+        sx={{
+          maxWidth: 345,
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+        }}
+      >
+        <CardMedia component="img" alt={title} height="140" image={image} />
+        <CardContent sx={{ height: "100%" }}>
+          <Typography gutterBottom variant="h6" component="div">
+            {title}
+          </Typography>
+        </CardContent>
+        <CardActions sx={{ justifyContent: "space-between" }}>
+          <Button variant="outlined" size="small" onClick={handleClickDetail}>
+            Ver detalles
+          </Button>
+          <Button variant="contained" size="small" onClick={handleClickComprar}>
+            comprar
+          </Button>
+        </CardActions>
+      </Card>
+    </>
   );
 };
-
-export default ComicCard;

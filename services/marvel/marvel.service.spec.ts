@@ -1,9 +1,9 @@
-import {getCharacter, getComic, getComics} from "services/marvel/marvel.service";
-import comics from "test/mocks/comics";
-import character from "test/mocks/character";
-import comic from "test/mocks/comic";
-import comicsWithOffsetAndLimit from "test/mocks/comicsWithOffsetAndLimit";
-import comicWithoutStock from "test/mocks/comicWithoutStock";
+import {getCharacter, getComic, getComics} from "dh-marvel/services/marvel/marvel.service";
+import comics from "dh-marvel/test/mocks/comics";
+import character from "dh-marvel/test/mocks/character";
+import comic from "dh-marvel/test/mocks/comic";
+import comicsWithOffsetAndLimit from "dh-marvel/test/mocks/comicsWithOffsetAndLimit";
+import comicWithoutStock from "dh-marvel/test/mocks/comicWithoutStock";
 
 describe('MarvelService', () => {
     beforeEach(() => {
