@@ -1,7 +1,7 @@
 import { GetStaticProps, NextPage } from "next";
 import FaqSection from "dh-marvel/components/faqs/FaqSection";
 import LayoutGeneral from "dh-marvel/components/layouts/layout-general";
-import { FaqsType } from "dh-marvel/components/faqs/faqsData";
+import { FaqsType, faqsData } from "dh-marvel/components/faqs/faqsData";
 
 interface Props {
   faqs: FaqsType[];
@@ -16,13 +16,11 @@ const faqsPage: NextPage<Props> = ({ faqs }) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const url = "http://comics-online.vercel.app";
-  const response = await fetch(`${url}/api/faqs`);
-  const faqs = await response.json();
+  const fetchedFaqs = faqsData;
 
   return {
     props: {
-      faqs,
+      faqs: fetchedFaqs,
     },
   };
 };
