@@ -8,7 +8,6 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
-import BuyingComicDetail from "dh-marvel/components/ComicCard/BuyingComicDetail";
 import { useRouter } from "next/router";
 import { IComic } from "contracts/comics.contract";
 import { FormProvider, useForm } from "react-hook-form";
@@ -24,6 +23,7 @@ import { toApiCheckout } from "mappers/checkout.mapper";
 import LayoutCheckout from "dh-marvel/components/layouts/layout-checkout";
 import Cookies from "js-cookie";
 import Spinner from "dh-marvel/components/Spinner/Spinner";
+import BuyingComicDetail from "dh-marvel/components/comicCard/BuyingComicDetail";
 
 const CheckoutPage: NextPage = () => {
   const router = useRouter();
@@ -220,4 +220,3 @@ const CheckoutPage: NextPage = () => {
 };
 
 export default CheckoutPage;
-

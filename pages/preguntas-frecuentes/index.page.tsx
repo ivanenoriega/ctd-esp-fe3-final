@@ -1,7 +1,7 @@
 import { GetStaticProps, NextPage } from "next";
 import FaqSection from "dh-marvel/components/faqs/FaqSection";
-import { FaqsType } from "dh-marvel/components/faqs";
 import LayoutGeneral from "dh-marvel/components/layouts/layout-general";
+import { FaqsType } from "dh-marvel/components/faqs/faqsData";
 
 interface Props {
   faqs: FaqsType[];

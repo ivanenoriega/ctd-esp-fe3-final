@@ -1,13 +1,13 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import BodySingle from "dh-marvel/components/layouts/body/single/body-single";
-import ComicGrid from "dh-marvel/components/ComicGrid/ComicGrid";
 import { getComics } from "dh-marvel/services/marvel/marvel.service";
 import { toFrontComics } from "mappers/comic.mapper";
 import ComicPagination from "dh-marvel/components/Pagination/ComicPagination";
 import { IPaginatedComic } from "contracts/comics.contract";
 import { useRouter } from "next/router";
 import LayoutGeneral from "dh-marvel/components/layouts/layout-general";
+import ComicGrid from "dh-marvel/components/comicGrid/comicGrid";
 
 interface Props {
   data: IPaginatedComic;

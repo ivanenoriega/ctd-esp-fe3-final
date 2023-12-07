@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import { Container } from "@mui/material";
 import React from "react";
-import { ComicCard, PropsCard } from "../ComicCard/ComicCard";
+import { ComicCard, PropsCard } from "../comicCard/comicCard";
 
 interface PropsGrid {
   comics: PropsCard[];
